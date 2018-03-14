@@ -6,11 +6,7 @@ const WebSocket = require('ws');
 
 const app = express();
 
-// app.use(function (req, res) {
-//     res.send({ msg: "hello" });
-// });
-
-app.get('/', (req, res) => res.send('Hello World!'))
+app.get('/', (req, res) => res.send('Relay Server Running'))
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
@@ -28,6 +24,8 @@ wss.broadcast = function broadcast(data) {
 wss.on('connection', function connection(ws) {
     ws.on('message', function incoming(data) {
         // Broadcast to everyone else.
+        console.log(Date() + ' --- ' + data)
+
         wss.clients.forEach(function each(client) {
             if (client !== ws && client.readyState === WebSocket.OPEN) {
                 client.send(data);
