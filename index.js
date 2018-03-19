@@ -173,15 +173,6 @@ wss.on('connection', function connection(ws) {
       console.log('ERROR: ' + err)
     }
 
-    // // Broadcast to everyone else.
-    // console.log(Date() + ' --- ' + data)
-
-    // wss.clients.forEach(function each(client) {
-    //     if (client !== ws && client.readyState === WebSocket.OPEN) {
-    //         client.send(data);
-    //     }
-    // });
-
   })
 })
 
