@@ -48,7 +48,17 @@ function onTagUpdateMessage(tagID, message) {
       let range = buf.readFloatBE(0)
 
       anchor_states[anchor_id]['active'] = true
-      tag_states[tagID]['ranges'][anchor_id] = range
+      anchor_height = anchor_states[anchor_id]['h']
+
+      if (anchor_height >= range) {
+        tag_states[tagID]['ranges'][anchor_id] = 0
+      } else {
+        tag_states[tagID]['ranges'][anchor_id] = Math.sqrt(
+          Math.pow(range, 2)
+          - Math.pow(anchor_height, 2)
+        )
+      }
+
       break
 
     case '01':
