@@ -110,3 +110,10 @@ Upon received a valid message the server responds with the current tag and ancho
   }
 }
 ```
+
+# Misc.
+
+To view current state
+```bash
+curl -s <host_address>:8080/state | python -m json.tool
+```

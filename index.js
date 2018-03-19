@@ -17,6 +17,10 @@ tag_states = Object.assign({}, initial_tag_states)
 // initialize networking
 const app = express();
 app.get('/', (req, res) => res.send('Relay Server Running'))
+app.get('/state', (req, res) => res.json({
+  'anchor_states':anchor_states,
+  'tag_states':tag_states
+}))
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
