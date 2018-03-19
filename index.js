@@ -5,16 +5,14 @@ const http = require('http');
 const math = require('mathjs')
 const url = require('url');
 
-// initialize anchor states
-// anchor at (0,0) is OPTIONAL
-anchor_states = {
-  '0001': {'x':  0, 'y': 0, 'active':false},
-  '0002': {'x':  0, 'y':20, 'active':false},
-  '0003': {'x': 20, 'y': 0, 'active':false},
-  '0004': {'x': 20, 'y':20, 'active':false}
-}
+// load configuration JSON file
+config = require('./config.json')
+initial_anchor_states = config['initial_anchor_states']
+initial_tag_states = config['initial_tag_states']
 
-tag_states = {}
+// initialize anchor states
+anchor_states = initial_anchor_states
+tag_states = initial_tag_states
 
 
 // update tag state if tag message received

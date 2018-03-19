@@ -1,0 +1,29 @@
+{
+  "initial_anchor_states": {
+    "0001": {
+      "x":  0,
+      "y":  0,
+      "h":  0,
+      "active":false
+    },
+    "0002": {
+      "x":  0,
+      "y": 20, 
+      "h":  0,
+      "active":false
+    },
+    "0003": {
+      "x": 20,
+      "y":  0,
+      "h":  0,
+      "active":false
+    },
+    "0004": {
+      "x": 20,
+      "y": 20,
+      "h":  0,
+      "active":false
+    }
+  },
+  "initial_tag_states": {}
+}
