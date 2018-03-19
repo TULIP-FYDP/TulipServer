@@ -93,12 +93,10 @@ function update_tag_location(tagID) {
     let current_distance = tag_states[tagID]['ranges'][anchor]
 
     if (isNaN(current_distance)) {
-      console.log('skipping ' + anchor)
       continue
     }
 
     if (isNaN(origin_distance)) {
-      console.log('Assigning Origin Anchor: ' + anchor)
       origin_distance = current_distance
       origin_x = anchor_states[anchor]['x']
       origin_y = anchor_states[anchor]['y']
@@ -163,7 +161,6 @@ wss.on('connection', function connection(ws) {
             results['message']
           )
 
-          console.log(anchor_states)
           console.log(tag_states)
 
           wss.clients.forEach(function each(client) {
