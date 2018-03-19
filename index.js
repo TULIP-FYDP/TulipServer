@@ -14,6 +14,12 @@ initial_tag_states = config['initial_tag_states']
 anchor_states = Object.assign({}, initial_anchor_states)
 tag_states = Object.assign({}, initial_tag_states)
 
+// initialize networking
+const app = express();
+app.get('/', (req, res) => res.send('Relay Server Running'))
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+
 
 // update tag state if tag message received
 function onTagUpdateMessage(tagID, message) {
@@ -75,12 +81,12 @@ function onTagUpdateMessage(tagID, message) {
   }
 
   // trigger X, Y update
-  update_tag_location(tagID)
+  _update_tag_location(tagID)
 }
 
 
 // update tag X, Y position
-function update_tag_location(tagID) {
+function _update_tag_location(tagID) {
 
   let origin_distance = NaN
   let origin_x = NaN
@@ -140,11 +146,26 @@ function update_tag_location(tagID) {
   }
 }
 
-// initialize networking
-const app = express();
-app.get('/', (req, res) => res.send('Relay Server Running'))
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+function onTagInsertMessage(tagID, x, y) {
+  tag_states[tagID] = {
+    'ranges': {},
+    'x': x,
+    'y': y
+  }
+}
+
+
+function _broadcastState() {
+  wss.clients.forEach(function each(client) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify({
+        'anchor_states': anchor_states,
+        'tag_states': tag_states
+      }))
+    }
+  })
+}
+
 
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(data) {
@@ -155,41 +176,34 @@ wss.on('connection', function connection(ws) {
     try {
       results = JSON.parse(data)
       if ('type' in results) {
+
         if (results['type'] == 'tagUpdate') {
           onTagUpdateMessage(
             results['id'],
             results['message']
           )
-
-          console.log(tag_states)
-
-          wss.clients.forEach(function each(client) {
-            if (client.readyState === WebSocket.OPEN) {
-              client.send(JSON.stringify({
-                'anchor_states': anchor_states,
-                'tag_states': tag_states
-              }))
-            }
-          })
-
+          _broadcastState()
         }
 
+        if (results['type'] == 'tagInsert') {
+          onTagInsertMessage(
+            results['id'],
+            results['x'],
+            results['y']
+          )
+          _broadcastState()
+        }
 
         if (results['type'] == 'reset') {
           console.log('Resetting...')
           anchor_states = Object.assign({}, initial_anchor_states)
           tag_states = Object.assign({}, initial_tag_states)
-
-          wss.clients.forEach(function each(client) {
-            if (client.readyState === WebSocket.OPEN) {
-              client.send(JSON.stringify({
-                'anchor_states': anchor_states,
-                'tag_states': tag_states
-              }))
-            }
-          })
+          _broadcastState()
         }
 
+        if (results['type'] == 'query') {
+          _broadcastState()
+        }
 
       }
     } catch(err) {
