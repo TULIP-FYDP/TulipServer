@@ -11,8 +11,8 @@ initial_anchor_states = config['initial_anchor_states']
 initial_tag_states = config['initial_tag_states']
 
 // initialize anchor states
-anchor_states = initial_anchor_states
-tag_states = initial_tag_states
+anchor_states = Object.assign({}, initial_anchor_states)
+tag_states = Object.assign({}, initial_tag_states)
 
 
 // update tag state if tag message received
@@ -155,7 +155,7 @@ wss.on('connection', function connection(ws) {
     try {
       results = JSON.parse(data)
       if ('type' in results) {
-        if (results['type'] = 'tagUpdate') {
+        if (results['type'] == 'tagUpdate') {
           onTagUpdateMessage(
             results['id'],
             results['message']
@@ -173,6 +173,24 @@ wss.on('connection', function connection(ws) {
           })
 
         }
+
+
+        if (results['type'] == 'reset') {
+          console.log('Resetting...')
+          anchor_states = Object.assign({}, initial_anchor_states)
+          tag_states = Object.assign({}, initial_tag_states)
+
+          wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+              client.send(JSON.stringify({
+                'anchor_states': anchor_states,
+                'tag_states': tag_states
+              }))
+            }
+          })
+        }
+
+
       }
     } catch(err) {
       console.log('ERROR: ' + err)
