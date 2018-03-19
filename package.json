@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.2",
+    "mathjs": "^4.0.1",
     "ws": "^5.0.0"
   }
 }
