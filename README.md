@@ -20,6 +20,7 @@ Websocket API located at `ws://<host_address>:8080`. Accepts JSON serialized mes
 ## Supported Incoming Messages (Received by Server)
 
 ### tagUpdate
+For forwarding messages received from TULIP Tags.
 ```JSON
 {
   "type":"tagUpdate",
@@ -35,6 +36,7 @@ Websocket API located at `ws://<host_address>:8080`. Accepts JSON serialized mes
 ```
 
 ### tagInsert
+To insert tag points into the map.
 ```JSON
 {
   "type":"tagInsert",
@@ -52,6 +54,7 @@ Websocket API located at `ws://<host_address>:8080`. Accepts JSON serialized mes
 ```
 
 ### reset
+To reset the server states.
 ```JSON
 {
   "type":"reset"
@@ -59,6 +62,7 @@ Websocket API located at `ws://<host_address>:8080`. Accepts JSON serialized mes
 ```
 
 ### query
+To query the server states without causing changes/
 ```JSON
 {
   "type":"query"
