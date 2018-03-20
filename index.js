@@ -57,6 +57,9 @@ function onTagUpdateMessage(tagID, message) {
       let buf = new Buffer(range_hex, "hex")
       let range = buf.readFloatBE(0)
 
+      // apply calibration linear transformation
+      range = (range - anchor_states[anchor_id]['cal_b']) / anchor_states[anchor_id]['cal_a']
+
       anchor_states[anchor_id]['active'] = true
       anchor_height = anchor_states[anchor_id]['h']
 
